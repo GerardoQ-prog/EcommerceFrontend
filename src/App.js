@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import {BrowserRouter as Router,Switch,Route, Redirect} from 'react-router-dom'
+import theme from './themeGlobal'
+import UserRoutes from './routes/UserRoutes';
+import LoginRoutes from './routes/LoginRoutes';
+const App = () => {
+    return (
+        <ThemeProvider theme={theme}>
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+       <Router>
+         <div>
+         <Switch>
+        
+
+         <Route  path="/auth" component={LoginRoutes}></Route>
+        <Route  exact path="/" component={UserRoutes}></Route>
+          
+
+           <Redirect to="/"></Redirect>
+
+         </Switch>
+         </div>
+       </Router>
+
+       </ThemeProvider>
+    )
 }
 
-export default App;
+export default App
+
