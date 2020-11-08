@@ -33,7 +33,7 @@ export const InputText = ({
   value,
   error = null,
   onChange,
-  ref,
+  type
 }) => {
   const classes = useStyles();
 
@@ -43,20 +43,27 @@ export const InputText = ({
       label={label}
       name={name}
       value={value}
+      required
+      type={type}
+      // helperText={helperText}
       onChange={onChange}
-      {...(error && { error: true, helperText: error })}
+      {...(error && { error: true,
+        //  helperText: error 
+        })}
       className={classes.textField}
-      ref={ref}
     />
   );
 };
-export const InputPassword = ({ value, error = null, onChange, ref }) => {
+export const InputPassword = ({ value, error = null, onChange }) => {
   const [ShowPassword, setShowPassword] = useState(false);
   const classes = useStyles();
 
   return (
-    <FormControl className={clsx(classes.textField)} variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+    <FormControl className={clsx(classes.textField)} variant="outlined"
+   required
+    {...(error && { error: true})}
+    >
+      <InputLabel htmlFor="outlined-adornment-password" >Contraseña</InputLabel>
       <OutlinedInput
         id="outlined-adornment-password"
         name="password"
@@ -64,8 +71,6 @@ export const InputPassword = ({ value, error = null, onChange, ref }) => {
         type={ShowPassword ? "text" : "password"}
         value={value}
         onChange={onChange}
-        ref={ref}
-        {...(error && { error: true, helperText: error })}
         endAdornment={
           <InputAdornment position="end">
             <IconButton

@@ -1,42 +1,18 @@
 import React, { useState } from "react";
-import {
-  Container,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  makeStyles,
-  OutlinedInput,
-  TextField,
-} from "@material-ui/core";
-// import Controls from "../../components/controls/Controls";
+import { Button, Container, makeStyles } from "@material-ui/core";
 import { useFormulario, Form } from "../hooks/UseForm";
-import clsx from "clsx";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { NavAuth } from "../components/NavAuth";
 import { ButtonAuth } from "../components/Buttons";
+import { InputPassword, InputText } from "../components/Input";
+import { Alerts } from "../components/Alerts";
 
-const genderItems = [
-  { id: "male", title: "Male" },
-  { id: "female", title: "Female" },
-  { id: "other", title: "Other" },
-];
-
-const initialFValues = {
-  id: 0,
-  fullName: "",
-  email: "",
-  mobile: "",
-  city: "",
-  gender: "male",
-  hireDate: new Date(),
-  isPermanent: false,
-  userName: "",
-  password: "",
-};
 const useStyles = makeStyles((theme) => ({
   root: {
-    textAlign: "-webkit-center",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    placeContent: "center",
   },
   withoutLabel: {
     marginTop: theme.spacing(3),
@@ -53,25 +29,42 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: "10px 0",
   },
+  logoAuth: {
+    margin: "20px 0",
+  },
+  buttonRestorePassword: {
+    color: "#C4C4C4",
+    fontWeight: "bold",
+    textTransform: "none",
+  },
 }));
 
+const initialFValues = {
+  email: "",
+  name: "",
+  password: "",
+};
+
 const Signin = () => {
+
+  // Alert---------------------------------------------------------
+  const [ActiveAlert, setActiveAlert] = useState(false);
+  const [Message, setMessage] = useState("");
+  const [Severity , setSeverity] = useState("");
+
+
+  //Validate Form--------------------------------------------------
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
-    if ("fullName" in fieldValues)
-      temp.fullName = fieldValues.fullName ? "" : "This field is required.";
-    if ("userName" in fieldValues)
-      temp.fullName = fieldValues.fullName ? "" : "This field is required.";
+    if ("name" in fieldValues)
+      temp.name = fieldValues.name ? "" : "This field is required.";
     if ("email" in fieldValues)
       temp.email = /$^|.+@.+..+/.test(fieldValues.email)
         ? ""
         : "Email is not valid.";
-    if ("mobile" in fieldValues)
-      temp.mobile =
-        fieldValues.mobile.length > 9 ? "" : "Minimum 10 numbers required.";
     if ("password" in fieldValues)
       temp.password =
-        fieldValues.password.length !== 0 ? "" : "This field is required.";
+        fieldValues.password.length > 6 ? "" : "This field is required.";
     setErrors({
       ...temp,
     });
@@ -89,61 +82,56 @@ const Signin = () => {
     resetForm,
   } = useFormulario(initialFValues, true, validate);
 
-  const handleSubmit = (e) => {
+  const handleSubmitSignin = (e) => {
     e.preventDefault();
     if (validate()) {
       console.log(values);
+      setSeverity("success")
+      setActiveAlert(true);
+      setMessage("Usuario creado satisfactoriamente");
       resetForm();
     }
   };
 
-  const [ShowPassword, setShowPassword] = useState(false);
-
   const classes = useStyles();
 
+  console.log(navigator)
   return (
-    <Container className={classes.root}>
-      <img src="/AllStarSportLogoBlack.svg" alt="" />
-      <NavAuth />
-      <Form onSubmit={handleSubmit} className={classes.form}>
-        <TextField
-          // id="outlined-basic"
-          error={false}
-          label="Usuario"
-          variant="outlined"
-          name="userName"
-          value={values.userName}
-          onChange={handleInputChange}
-          className={classes.textField}
+    <>
+      <Container className={classes.root}>
+        <img
+          src="/AllStarSportLogoBlack.svg"
+          alt="AllStarSportLogoBlack"
+          className={classes.logoAuth}
         />
-        <FormControl className={clsx(classes.textField)} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">
-            Contraseña
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={ShowPassword ? "text" : "password"}
-            value={values.password}
-            name="password"
+        <NavAuth />
+        <Form onSubmit={handleSubmitSignin} className={classes.form}>
+          <InputText
+            error={errors.name}
+            label="Nombre"
+            name="name"
+            value={values.name}
             onChange={handleInputChange}
-            label="Contraseña"
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!ShowPassword)}
-                  onMouseDown={(e) => e.preventDefault}
-                  edge="end"
-                >
-                  {ShowPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
           />
-        </FormControl>
-        <ButtonAuth name="Iniciar Sesión" />
-      </Form>
-    </Container>
+          <InputPassword
+            error={errors.password}
+            value={values.password}
+            onChange={handleInputChange}
+          />
+          <ButtonAuth name="Iniciar Sesión" />
+        </Form>
+    <Button className={classes.buttonRestorePassword}>
+      Recuperar contraseña
+    </Button>
+      </Container>
+      {/* <Button onClick={() => {setActiveAlert(!ActiveAlert); setMessage("Holaa BB")}}>Active alert</Button> */}
+      <Alerts
+        severity={Severity}
+        active={ActiveAlert}
+        message={Message}
+        desactive={setActiveAlert}
+      />
+    </>
   );
 };
 

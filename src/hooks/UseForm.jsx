@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from "@material-ui/core";
 
-export function useFormulario(initialFValues, validateOnChange = false) {
+export function useFormulario(initialFValues, validateOnChange = false, validate) {
 
 
     const [values, setValues] = useState(initialFValues);
@@ -9,13 +9,12 @@ export function useFormulario(initialFValues, validateOnChange = false) {
 
     const handleInputChange = e => {
         const { name, value } = e.target
-        console.log(e)
         setValues({
             ...values,
             [name]: value
         })
-        // if (validateOnChange)
-        //     validate({ [name]: value })
+        if (validateOnChange)
+            validate({ [name]: value })
     }
 
     const resetForm = () => {
@@ -27,8 +26,8 @@ export function useFormulario(initialFValues, validateOnChange = false) {
     return {
         values,
         setValues,
-        // errors,
-        // setErrors,
+        errors,
+        setErrors,
         handleInputChange,
         resetForm
 

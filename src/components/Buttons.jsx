@@ -7,6 +7,9 @@ const useStyles = makeStyles(() => ({
         width: "100%",
         margin: "10px 0",
         height: "55px",
+        textTransform: "capitalize",
+      fontSize: "18px"
+
       },
 }));
 export const ButtonAuth = ({ name, onClick }) => {
